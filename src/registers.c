@@ -1,0 +1,80 @@
+#include <string.h>
+#include "include/registers.h"
+
+const char *get_register8_name(Register8 reg) {
+    switch (reg) {
+        case REG8_AL: return "AL";
+        case REG8_BL: return "BL";
+        case REG8_CL: return "CL";
+        case REG8_DL: return "DL";
+        case REG8_AH: return "AH";
+        case REG8_BH: return "BH";
+        case REG8_CH: return "CH";
+        case REG8_DH: return "DH";
+        default: return "UNKNOWN";
+    }
+}
+
+Register8 get_register8_by_name(const char *name) {
+    if (strcmp(name, "AL") == 0) return REG8_AL;
+    if (strcmp(name, "BL") == 0) return REG8_BL;
+    if (strcmp(name, "CL") == 0) return REG8_CL;
+    if (strcmp(name, "DL") == 0) return REG8_DL;
+    if (strcmp(name, "AH") == 0) return REG8_AH;
+    if (strcmp(name, "BH") == 0) return REG8_BH;
+    if (strcmp(name, "CH") == 0) return REG8_CH;
+    if (strcmp(name, "DH") == 0) return REG8_DH;
+    return REG8_NONE;
+}
+
+const char *get_register16_name(Register16 reg) {
+    switch (reg) {
+        case REG16_AX: return "AX";
+        case REG16_BX: return "BX";
+        case REG16_CX: return "CX";
+        case REG16_DX: return "DX";
+        case REG16_SI: return "SI";
+        case REG16_DI: return "DI";
+        case REG16_BP: return "BP";
+        case REG16_SP: return "SP";
+        default: return "UNKNOWN";
+    }
+}
+
+Register16 get_register16_by_name(const char *name) {
+    if (strcmp(name, "AX") == 0) return REG16_AX;
+    if (strcmp(name, "BX") == 0) return REG16_BX;
+    if (strcmp(name, "CX") == 0) return REG16_CX;
+    if (strcmp(name, "DX") == 0) return REG16_DX;
+    if (strcmp(name, "SI") == 0) return REG16_SI;
+    if (strcmp(name, "DI") == 0) return REG16_DI;
+    if (strcmp(name, "BP") == 0) return REG16_BP;
+    if (strcmp(name, "SP") == 0) return REG16_SP;
+    return REG16_NONE;
+}
+
+const char *get_register32_name(Register32 reg) {
+    switch (reg) {
+        case REG32_EAX: return "EAX";
+        case REG32_EBX: return "EBX";
+        case REG32_ECX: return "ECX";
+        case REG32_EDX: return "EDX";
+        case REG32_ESI: return "ESI";
+        case REG32_EDI: return "EDI";
+        case REG32_EBP: return "EBP";
+        case REG32_ESP: return "ESP";
+        default: return "UNKNOWN";
+    }
+}
+
+Register32 get_register32_by_name(const char *name) {
+    if (strcmp(name, "EAX") == 0) return REG32_EAX;
+    if (strcmp(name, "EBX") == 0) return REG32_EBX;
+    if (strcmp(name, "ECX") == 0) return REG32_ECX;
+    if (strcmp(name, "EDX") == 0) return REG32_EDX;
+    if (strcmp(name, "ESI") == 0) return REG32_ESI;
+    if (strcmp(name, "EDI") == 0) return REG32_EDI;
+    if (strcmp(name, "EBP") == 0) return REG32_EBP;
+    if (strcmp(name, "ESP") == 0) return REG32_ESP;
+    return REG32_NONE;
+}
