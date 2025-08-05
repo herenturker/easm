@@ -349,6 +349,9 @@ const char *token_type_to_string(TokenType type)
         return "SECTION_TYPE";
     case TOKEN_COLON:
         return "COLON";
+    case TOKEN_SEGREG:
+        return "SEGREG";
+
     default:
         return "UNKNOWN";
     }

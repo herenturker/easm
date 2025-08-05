@@ -78,3 +78,27 @@ Register32 get_register32_by_name(const char *name) {
     if (strcmp(name, "ESP") == 0) return REG32_ESP;
     return REG32_NONE;
 }
+
+// --- Segment Registers ---
+
+const char *get_segment_register_name(SegmentRegister reg) {
+    switch (reg) {
+        case SEGREG_CS: return "CS";
+        case SEGREG_DS: return "DS";
+        case SEGREG_SS: return "SS";
+        case SEGREG_ES: return "ES";
+        case SEGREG_FS: return "FS";
+        case SEGREG_GS: return "GS";
+        default: return "UNKNOWN";
+    }
+}
+
+SegmentRegister get_segment_register_by_name(const char *name) {
+    if (strcmp(name, "CS") == 0) return SEGREG_CS;
+    if (strcmp(name, "DS") == 0) return SEGREG_DS;
+    if (strcmp(name, "SS") == 0) return SEGREG_SS;
+    if (strcmp(name, "ES") == 0) return SEGREG_ES;
+    if (strcmp(name, "FS") == 0) return SEGREG_FS;
+    if (strcmp(name, "GS") == 0) return SEGREG_GS;
+    return SEGREG_NONE;
+}

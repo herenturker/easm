@@ -40,11 +40,24 @@ typedef enum
     REG32_ESP
 } Register32;
 
+typedef enum
+{
+    SEGREG_NONE = 0,
+    SEGREG_CS,
+    SEGREG_DS,
+    SEGREG_SS,
+    SEGREG_ES,
+    SEGREG_FS,
+    SEGREG_GS
+} SegmentRegister;
+
 const char *get_register8_name(Register8 reg);
 Register8 get_register8_by_name(const char *name);
 const char *get_register16_name(Register16 reg);
 Register16 get_register16_by_name(const char *name);
 const char *get_register32_name(Register32 reg);
 Register32 get_register32_by_name(const char *name);
+const char *get_segment_register_name(SegmentRegister reg);
+SegmentRegister get_segment_register_by_name(const char *name);
 
 #endif
