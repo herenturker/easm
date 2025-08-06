@@ -6,17 +6,23 @@
 #include "include/errors.h"
 #include "include/strops.h"
 
+// Global variable to hold current filename for error reporting
 char g_filename[256] = "";
 
+/**
+ * @brief Sets the current source filename for error messages.
+ */
 void set_filename(const char *filename)
 {
     strncpy(g_filename, filename, sizeof(g_filename) - 1);
     g_filename[sizeof(g_filename) - 1] = '\0';
 }
 
+/**
+ * @brief Checks if a lexeme is a segment register.
+ */
 int is_segment_register(const char *lexeme)
 {
-
     return (strcmp(lexeme, "CS") == 0) ||
            (strcmp(lexeme, "DS") == 0) ||
            (strcmp(lexeme, "SS") == 0) ||
@@ -25,15 +31,16 @@ int is_segment_register(const char *lexeme)
            (strcmp(lexeme, "GS") == 0);
 }
 
+/**
+ * @brief Returns whether the given position is inside quotes from line start.
+ */
 int is_inside_quotes(const char *line_start, const char *pos)
 {
     int quote_count = 0;
     for (const char *c = line_start; c < pos; c++)
     {
         if (*c == '"')
-        {
             quote_count++;
-        }
     }
     return (quote_count % 2) != 0;
 }
@@ -53,6 +60,9 @@ int is_register32(const char *lexeme)
     return get_register32_by_name(lexeme) != REG32_NONE;
 }
 
+/**
+ * @brief Determines the token type of a register lexeme.
+ */
 TokenType get_register_token_type(const char *lexeme)
 {
     if (is_register8(lexeme))
@@ -66,6 +76,9 @@ TokenType get_register_token_type(const char *lexeme)
     return TOKEN_REG;
 }
 
+/**
+ * @brief Retrieves the next token from the input string.
+ */
 Token get_next_token(const char **input_ptr, int *line)
 {
     Token token;
@@ -75,9 +88,11 @@ Token get_next_token(const char **input_ptr, int *line)
     const char *p = *input_ptr;
     const char *line_start = *input_ptr;
 
+    // Skip whitespace
     while (*p == ' ' || *p == '\t')
         p++;
 
+    // End of line/input
     if (*p == '\0' || *p == '\n')
     {
         token.type = TOKEN_EOF;
@@ -86,6 +101,7 @@ Token get_next_token(const char **input_ptr, int *line)
         return token;
     }
 
+    // Single character tokens
     if (*p == ',')
     {
         token.type = TOKEN_COMMA;
@@ -94,7 +110,6 @@ Token get_next_token(const char **input_ptr, int *line)
         *input_ptr = p;
         return token;
     }
-
     if (*p == '.')
     {
         token.type = TOKEN_DOT;
@@ -103,7 +118,6 @@ Token get_next_token(const char **input_ptr, int *line)
         *input_ptr = p;
         return token;
     }
-
     if (*p == ':')
     {
         token.type = TOKEN_COLON;
@@ -113,63 +127,58 @@ Token get_next_token(const char **input_ptr, int *line)
         return token;
     }
 
-    if (*p == ';')
+    // Comment token, only if not inside quotes
+    if (*p == ';' && !is_inside_quotes(line_start, p))
     {
-        if (!is_inside_quotes(line_start, p))
+        token.type = TOKEN_COMMENT;
+        int i = 0;
+        while (*p != '\0' && *p != '\n')
         {
-            token.type = TOKEN_COMMENT;
-            int i = 0;
-            while (*p != '\0' && *p != '\n')
-            {
-                if (i < sizeof(token.lexeme) - 1)
-                    token.lexeme[i++] = *p;
-                p++;
-            }
-            token.lexeme[i] = '\0';
-            *input_ptr = p;
-            return token;
+            if (i < (int)sizeof(token.lexeme) - 1)
+                token.lexeme[i++] = *p;
+            p++;
         }
+        token.lexeme[i] = '\0';
+        *input_ptr = p;
+        return token;
     }
 
-    if (*p == '\'')
+    // Char literal token e.g. 'A'
+    if (*p == '\'' && !is_inside_quotes(line_start, p))
     {
-        if (!is_inside_quotes(line_start, p))
-        {
-            token.type = TOKEN_CHAR;
-            int i = 0;
+        token.type = TOKEN_CHAR;
+        int i = 0;
+        token.lexeme[i++] = *p; // opening quote
+        p++;
 
+        if (*p != '\0' && *p != '\n')
+        {
             token.lexeme[i++] = *p;
             p++;
-
-            if (*p != '\0' && *p != '\n')
-            {
-                token.lexeme[i++] = *p;
-                p++;
-            }
-            else
-            {
-                occur_error(ERROR_NO_CHAR_WRITTEN_AND_END_OF_LINE, line, g_filename);
-                goto terminate;
-            }
-
-            if (*p == '\'')
-            {
-                token.lexeme[i++] = *p;
-                p++;
-            }
-            else
-            {
-                occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
-                goto terminate;
-            }
-
-            token.lexeme[i] = '\0';
-
-            *input_ptr = p;
-            return token;
         }
+        else
+        {
+            occur_error(ERROR_NO_CHAR_WRITTEN_AND_END_OF_LINE, line, g_filename);
+            goto terminate;
+        }
+
+        if (*p == '\'')
+        {
+            token.lexeme[i++] = *p;
+            p++;
+        }
+        else
+        {
+            occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
+            goto terminate;
+        }
+
+        token.lexeme[i] = '\0';
+        *input_ptr = p;
+        return token;
     }
 
+    // Number token (decimal or hex)
     if ((*p >= '0' && *p <= '9') || (*p == '0' && (*(p + 1) == 'x' || *(p + 1) == 'X')))
     {
         int i = 0;
@@ -188,6 +197,7 @@ Token get_next_token(const char **input_ptr, int *line)
         return token;
     }
 
+    // Identifier, label, directive, instruction, or register
     if ((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p <= 'z') || *p == '_')
     {
         int i = 0;
@@ -200,19 +210,21 @@ Token get_next_token(const char **input_ptr, int *line)
         }
         token.lexeme[i] = '\0';
 
+        // Check if followed by colon => label
         if (*p == ':')
         {
             token.type = TOKEN_LABEL;
-            strcpy(token.lexeme, token.lexeme);
             *input_ptr = p;
             return token;
         }
 
+        // Convert lexeme to uppercase for uniformity
         char upper_lexeme[64];
         strncpy(upper_lexeme, token.lexeme, sizeof(upper_lexeme) - 1);
         upper_lexeme[sizeof(upper_lexeme) - 1] = '\0';
         str_to_upper(upper_lexeme);
 
+        // Check if it's a register
         TokenType reg_type = get_register_token_type(upper_lexeme);
         if (reg_type != TOKEN_REG)
         {
@@ -221,7 +233,7 @@ Token get_next_token(const char **input_ptr, int *line)
         }
         else
         {
-
+            // Keywords and directives
             if (strcmp(upper_lexeme, "SECTION") == 0)
             {
                 token.type = TOKEN_SECTION;
@@ -247,6 +259,7 @@ Token get_next_token(const char **input_ptr, int *line)
         return token;
     }
 
+    // Unknown token - report error
     token.type = TOKEN_ERROR;
     token.lexeme[0] = *p;
     token.lexeme[1] = '\0';
@@ -261,9 +274,16 @@ terminate:
     *input_ptr = p;
     return token;
 }
-
+/**
+ * @brief Processes a line of code: extracts tokens and prints them.
+ *
+ * @param line           The input line to parse, may start with "lineNumber~code".
+ * @param file           The filename for error reporting.
+ * @param line_number_ptr Pointer to current line number counter (will be incremented).
+ */
 void lexer_process_line(const char *line, const char *file, int *line_number_ptr)
 {
+    // Check if line contains embedded line number (format: lineNum~code)
     const char *tilde = strchr(line, '~');
     int line_number = 0;
 
@@ -271,30 +291,39 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
     {
         char line_number_str[16];
         int len = (int)(tilde - line);
+
         if (len > (int)sizeof(line_number_str) - 1)
             len = sizeof(line_number_str) - 1;
+
         strncpy(line_number_str, line, len);
         line_number_str[len] = '\0';
         line_number = atoi(line_number_str);
 
-        line += (len + 1);
+        // Move pointer to start of code after tilde
+        line = tilde + 1;
+
+        // If caller wants to keep track, update their line number
+        if (line_number_ptr)
+            *line_number_ptr = line_number + 1;
     }
     else if (line_number_ptr != NULL)
     {
+        // Use caller's line number and increment it for next call
         line_number = *line_number_ptr;
         (*line_number_ptr)++;
     }
     else
     {
-        // default 0
+        // No line number info, default to 0
         line_number = 0;
     }
 
-    printf("Parsing line %d: %s\n", *line_number_ptr, line);
+    printf("Parsing line %d: %s\n", line_number, line);
     set_filename(file);
 
     const char *code_ptr = line;
 
+    // Tokenize entire line
     while (1)
     {
         Token token = get_next_token(&code_ptr, &line_number);
@@ -307,6 +336,9 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
     }
 }
 
+/**
+ * @brief Converts a token type enum to a human-readable string.
+ */
 const char *token_type_to_string(TokenType type)
 {
     switch (type)

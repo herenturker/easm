@@ -1,6 +1,12 @@
 #include <string.h>
 #include "include/registers.h"
 
+/**
+ * @brief Returns the name of an 8-bit register.
+ *
+ * @param reg Enum value representing the 8-bit register.
+ * @return const char* String representation of the register, or "UNKNOWN" if invalid.
+ */
 const char *get_register8_name(Register8 reg) {
     switch (reg) {
         case REG8_AL: return "AL";
@@ -15,6 +21,12 @@ const char *get_register8_name(Register8 reg) {
     }
 }
 
+/**
+ * @brief Returns the enum value of an 8-bit register by its name.
+ *
+ * @param name Null-terminated string name of the register (e.g., "AL").
+ * @return Register8 Corresponding enum value, or REG8_NONE if unknown.
+ */
 Register8 get_register8_by_name(const char *name) {
     if (strcmp(name, "AL") == 0) return REG8_AL;
     if (strcmp(name, "BL") == 0) return REG8_BL;
@@ -27,6 +39,12 @@ Register8 get_register8_by_name(const char *name) {
     return REG8_NONE;
 }
 
+/**
+ * @brief Returns the name of a 16-bit register.
+ *
+ * @param reg Enum value representing the 16-bit register.
+ * @return const char* String representation of the register, or "UNKNOWN" if invalid.
+ */
 const char *get_register16_name(Register16 reg) {
     switch (reg) {
         case REG16_AX: return "AX";
@@ -41,6 +59,12 @@ const char *get_register16_name(Register16 reg) {
     }
 }
 
+/**
+ * @brief Returns the enum value of a 16-bit register by its name.
+ *
+ * @param name Null-terminated string name of the register (e.g., "AX").
+ * @return Register16 Corresponding enum value, or REG16_NONE if unknown.
+ */
 Register16 get_register16_by_name(const char *name) {
     if (strcmp(name, "AX") == 0) return REG16_AX;
     if (strcmp(name, "BX") == 0) return REG16_BX;
@@ -53,6 +77,12 @@ Register16 get_register16_by_name(const char *name) {
     return REG16_NONE;
 }
 
+/**
+ * @brief Returns the name of a 32-bit register.
+ *
+ * @param reg Enum value representing the 32-bit register.
+ * @return const char* String representation of the register, or "UNKNOWN" if invalid.
+ */
 const char *get_register32_name(Register32 reg) {
     switch (reg) {
         case REG32_EAX: return "EAX";
@@ -67,6 +97,12 @@ const char *get_register32_name(Register32 reg) {
     }
 }
 
+/**
+ * @brief Returns the enum value of a 32-bit register by its name.
+ *
+ * @param name Null-terminated string name of the register (e.g., "EAX").
+ * @return Register32 Corresponding enum value, or REG32_NONE if unknown.
+ */
 Register32 get_register32_by_name(const char *name) {
     if (strcmp(name, "EAX") == 0) return REG32_EAX;
     if (strcmp(name, "EBX") == 0) return REG32_EBX;
@@ -79,8 +115,12 @@ Register32 get_register32_by_name(const char *name) {
     return REG32_NONE;
 }
 
-// --- Segment Registers ---
-
+/**
+ * @brief Returns the name of a segment register.
+ *
+ * @param reg Enum value representing the segment register.
+ * @return const char* String representation of the segment register, or "UNKNOWN" if invalid.
+ */
 const char *get_segment_register_name(SegmentRegister reg) {
     switch (reg) {
         case SEGREG_CS: return "CS";
@@ -93,6 +133,12 @@ const char *get_segment_register_name(SegmentRegister reg) {
     }
 }
 
+/**
+ * @brief Returns the enum value of a segment register by its name.
+ *
+ * @param name Null-terminated string name of the register (e.g., "DS").
+ * @return SegmentRegister Corresponding enum value, or SEGREG_NONE if unknown.
+ */
 SegmentRegister get_segment_register_by_name(const char *name) {
     if (strcmp(name, "CS") == 0) return SEGREG_CS;
     if (strcmp(name, "DS") == 0) return SEGREG_DS;
