@@ -1,4 +1,4 @@
-; Basit bir "Hello, world!" tarzı .asm dosyası (gerçek donanımda bir şey yapmaz, test amaçlıdır)
+;  "Hello, world!" tarzı .asm dosyası ama bozuk hali
 
 section .text
 start:
