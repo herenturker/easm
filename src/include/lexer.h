@@ -2,6 +2,7 @@
 #define LEXER_H
 
 #include "registers.h"
+#include "instructions.h"
 
 /**
  * @brief Represents different types of tokens that can be identified during lexical analysis.
@@ -35,6 +36,7 @@ typedef enum {
 typedef struct
 {
     TokenType type;         /**< Type of the token */
+    InstructionType instr_type; /**< Type of the instruction */
     int line;               /**< Line number where the token was found */
     char lexeme[64];        /**< The actual lexeme (string representation) */
 } Token;

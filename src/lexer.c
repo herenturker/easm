@@ -5,6 +5,7 @@
 #include "include/registers.h"
 #include "include/errors.h"
 #include "include/strops.h"
+#include "include/instructions.h"
 
 // Global variable to hold current filename for error reporting
 char g_filename[256] = "";
@@ -251,8 +252,21 @@ Token get_next_token(const char **input_ptr, int *line)
             }
             else
             {
-                token.type = TOKEN_INSTR;
-                strcpy(token.lexeme, upper_lexeme);
+                token.instr_type = INSTR_GENERIC;
+
+                InstructionType instr_type = get_instruction_type(upper_lexeme);
+                if (instr_type != INSTR_GENERIC)
+                {
+                    token.type = TOKEN_INSTR;
+                    token.instr_type = instr_type;
+                    strcpy(token.lexeme, upper_lexeme);
+                }
+
+                else
+                {
+                    token.type = TOKEN_INSTR;
+                    strcpy(token.lexeme, upper_lexeme);
+                }
             }
         }
         *input_ptr = p;
@@ -327,12 +341,22 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
     while (1)
     {
         Token token = get_next_token(&code_ptr, &line_number);
+
         if (token.type == TOKEN_EOF)
             break;
 
-        printf("Token: %-12s Lexeme: %s\n",
-               token_type_to_string(token.type),
-               token.lexeme);
+        if (token.type == TOKEN_INSTR)
+        {
+            printf("Token: %-12s Lexeme: %s\n",
+                   instruction_type_to_string(token.instr_type),
+                   token.lexeme);
+        }
+        else
+        {
+            printf("Token: %-12s Lexeme: %s\n",
+                   token_type_to_string(token.type),
+                   token.lexeme);
+        }
     }
 }
 
