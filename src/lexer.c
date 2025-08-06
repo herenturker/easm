@@ -6,6 +6,7 @@
 #include "include/errors.h"
 #include "include/strops.h"
 #include "include/instructions.h"
+#include "include/symbol_table.h"
 
 // Global variable to hold current filename for error reporting
 char g_filename[256] = "";
@@ -35,15 +36,12 @@ int is_segment_register(const char *lexeme)
 /**
  * @brief Returns whether the given position is inside quotes from line start.
  */
-int is_inside_quotes(const char *line_start, const char *pos)
-{
-    int quote_count = 0;
-    for (const char *c = line_start; c < pos; c++)
-    {
-        if (*c == '"')
-            quote_count++;
+int is_inside_quotes(const char *line_start, const char *pos) {
+    int inside = 0;
+    for (const char *c = line_start; c < pos; ++c) {
+        if (*c == '"') inside = !inside;
     }
-    return (quote_count % 2) != 0;
+    return inside;
 }
 
 int is_register8(const char *lexeme)
@@ -170,6 +168,33 @@ Token get_next_token(const char **input_ptr, int *line)
         }
         else
         {
+            occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
+            goto terminate;
+        }
+
+        token.lexeme[i] = '\0';
+        *input_ptr = p;
+        return token;
+    }
+
+    // String literal token e.g. "Hello, World!"
+    if (*p == '"' && !is_inside_quotes(line_start, p)) {
+        token.type = TOKEN_STRING;
+        int i = 0;
+        token.lexeme[i++] = *p; // opening quote
+        p++;
+
+    // Capture until closing quote or end of line/input
+        while (*p != '"' && *p != '\0' && *p != '\n') {
+            if (i < (int)sizeof(token.lexeme) - 1)
+                token.lexeme[i++] = *p;
+            p++;
+        }
+
+        if (*p == '"') {
+            token.lexeme[i++] = *p; // closing quote
+            p++;
+        } else {
             occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
             goto terminate;
         }
