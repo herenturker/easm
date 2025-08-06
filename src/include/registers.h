@@ -127,4 +127,39 @@ const char *get_segment_register_name(SegmentRegister reg);
  */
 SegmentRegister get_segment_register_by_name(const char *name);
 
-#endif
+
+
+/**
+ * @brief Convert an 8-bit register enum value to its string representation.
+ *
+ * @param reg_type The Register8 enum value.
+ * @return A constant string representing the 8-bit register name.
+ */
+const char *reg8_type_to_string(Register8 reg_type);
+
+/**
+ * @brief Convert a 16-bit register enum value to its string representation.
+ *
+ * @param reg_type The Register16 enum value.
+ * @return A constant string representing the 16-bit register name.
+ */
+const char *reg16_type_to_string(Register16 reg_type);
+
+/**
+ * @brief Convert a 32-bit register enum value to its string representation.
+ *
+ * @param reg_type The Register32 enum value.
+ * @return A constant string representing the 32-bit register name.
+ */
+const char *reg32_type_to_string(Register32 reg_type);
+
+/**
+ * @brief Convert a segment register enum value to its string representation.
+ *
+ * @param reg_type The SegmentRegister enum value.
+ * @return A constant string representing the segment register name.
+ */
+const char *segreg_type_to_string(SegmentRegister reg_type);
+
+
+#endif // REGISTERS_H

@@ -37,6 +37,10 @@ typedef struct
 {
     TokenType type;         /**< Type of the token */
     InstructionType instr_type; /**< Type of the instruction */
+    Register8 t_register8; /**< Type of the register (8 bit) */
+    Register16 t_register16; /**< Type of the register (16 bit) */
+    Register32 t_register32; /**< Type of the register (32 bit) */
+    SegmentRegister t_segregister; /**< Type of the register (segment register) */
     int line;               /**< Line number where the token was found */
     char lexeme[64];        /**< The actual lexeme (string representation) */
 } Token;
@@ -123,4 +127,4 @@ int is_register8(const char *lexeme);
  */
 int is_segment_register(const char *lexeme);
 
-#endif
+#endif // LEXER_H

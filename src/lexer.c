@@ -230,7 +230,23 @@ Token get_next_token(const char **input_ptr, int *line)
         if (reg_type != TOKEN_REG)
         {
             token.type = reg_type;
-            strcpy(token.lexeme, upper_lexeme);
+            if (token.type == TOKEN_REG8) {
+                token.t_register8 = get_register8_by_name(upper_lexeme);
+                strcpy(token.lexeme, upper_lexeme);
+            }
+            if (token.type == TOKEN_REG16) {
+                token.t_register16 = get_register16_by_name(upper_lexeme);
+                strcpy(token.lexeme, upper_lexeme);
+            }
+            if (token.type == TOKEN_REG32) {
+                token.t_register32 = get_register32_by_name(upper_lexeme);
+                strcpy(token.lexeme, upper_lexeme);
+            }
+            if (token.type == TOKEN_SEGREG) {
+                token.t_segregister = get_segment_register_by_name(upper_lexeme);
+                strcpy(token.lexeme, upper_lexeme);
+            }
+            // strcpy(token.lexeme, upper_lexeme);
         }
         else
         {
@@ -349,6 +365,26 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
         {
             printf("Token: %-12s Lexeme: %s\n",
                    instruction_type_to_string(token.instr_type),
+                   token.lexeme);
+        } else if (token.type == TOKEN_REG8)
+        {
+            printf("Token: %-12s Lexeme: %s\n",
+                   reg8_type_to_string(token.t_register8),
+                   token.lexeme);
+        } else if (token.type == TOKEN_REG16)
+        {
+            printf("Token: %-12s Lexeme: %s\n",
+                   reg16_type_to_string(token.t_register16),
+                   token.lexeme);
+        } else if (token.type == TOKEN_REG32)
+        {
+            printf("Token: %-12s Lexeme: %s\n",
+                   reg32_type_to_string(token.t_register32),
+                   token.lexeme);
+        } else if (token.type == TOKEN_SEGREG)
+        {
+            printf("Token: %-12s Lexeme: %s\n",
+                   segreg_type_to_string(token.t_segregister),
                    token.lexeme);
         }
         else

@@ -148,3 +148,81 @@ SegmentRegister get_segment_register_by_name(const char *name) {
     if (strcmp(name, "GS") == 0) return SEGREG_GS;
     return SEGREG_NONE;
 }
+
+
+/**
+ * @brief Convert an 8-bit register enum value to its string representation.
+ *
+ * @param reg_type The Register8 enum value.
+ * @return A constant string representing the 8-bit register name.
+ */
+const char *reg8_type_to_string(Register8 reg_type) {
+    switch (reg_type) {
+        case REG8_AL: return "REG8_AL";
+        case REG8_BL: return "REG8_BL";
+        case REG8_CL: return "REG8_CL";
+        case REG8_DL: return "REG8_DL";
+        case REG8_AH: return "REG8_AH";
+        case REG8_BH: return "REG8_BH";
+        case REG8_CH: return "REG8_CH";
+        case REG8_DH: return "REG8_DH";
+        default: return "REG8_UNKNOWN";
+    }
+}
+
+/**
+ * @brief Convert a 16-bit register enum value to its string representation.
+ *
+ * @param reg_type The Register16 enum value.
+ * @return A constant string representing the 16-bit register name.
+ */
+const char *reg16_type_to_string(Register16 reg_type) {
+    switch (reg_type) {
+        case REG16_AX: return "REG16_AX";
+        case REG16_BX: return "REG16_BX";
+        case REG16_CX: return "REG16_CX";
+        case REG16_DX: return "REG16_DX";
+        case REG16_SI: return "REG16_SI";
+        case REG16_DI: return "REG16_DI";
+        case REG16_BP: return "REG16_BP";
+        case REG16_SP: return "REG16_SP";
+        default: return "REG16_UNKNOWN";
+    }
+}
+
+/**
+ * @brief Convert a 32-bit register enum value to its string representation.
+ *
+ * @param reg_type The Register32 enum value.
+ * @return A constant string representing the 32-bit register name.
+ */
+const char *reg32_type_to_string(Register32 reg_type) {
+    switch (reg_type) {
+        case REG32_EAX: return "REG32_EAX";
+        case REG32_EBX: return "REG32_EBX";
+        case REG32_ECX: return "REG32_ECX";
+        case REG32_EDX: return "REG32_EDX";
+        case REG32_ESI: return "REG32_ESI";
+        case REG32_EDI: return "REG32_EDI";
+        case REG32_EBP: return "REG32_EBP";
+        case REG32_ESP: return "REG32_ESP";
+        default: return "REG32_UNKNOWN";
+    }
+}
+/**
+ * @brief Convert a segment register enum value to its string representation.
+ *
+ * @param reg_type The SegmentRegister enum value.
+ * @return A constant string representing the segment register name.
+ */
+const char *segreg_type_to_string(SegmentRegister reg_type) {
+    switch (reg_type) {
+        case SEGREG_CS: return "SEGREG_CS";
+        case SEGREG_DS: return "SEGREG_DS";
+        case SEGREG_SS: return "SEGREG_SS";
+        case SEGREG_ES: return "SEGREG_ES";
+        case SEGREG_FS: return "SEGREG_FS";
+        case SEGREG_GS: return "SEGREG_GS";
+        default: return "SEGREG_UNKNOWN";
+    }
+}
