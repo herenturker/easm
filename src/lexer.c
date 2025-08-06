@@ -36,10 +36,13 @@ int is_segment_register(const char *lexeme)
 /**
  * @brief Returns whether the given position is inside quotes from line start.
  */
-int is_inside_quotes(const char *line_start, const char *pos) {
+int is_inside_quotes(const char *line_start, const char *pos)
+{
     int inside = 0;
-    for (const char *c = line_start; c < pos; ++c) {
-        if (*c == '"') inside = !inside;
+    for (const char *c = line_start; c < pos; ++c)
+    {
+        if (*c == '"')
+            inside = !inside;
     }
     return inside;
 }
@@ -142,29 +145,142 @@ Token get_next_token(const char **input_ptr, int *line)
         return token;
     }
 
-    // Char literal token e.g. 'A'
+    if (*p == ';')
+    {
+        token.type = TOKEN_SEMICOLON;
+        strcpy(token.lexeme, ";");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '%')
+    {
+        token.type = TOKEN_MODULO;
+        strcpy(token.lexeme, "%");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '*')
+    {
+        token.type = TOKEN_STAR;
+        strcpy(token.lexeme, "*");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '-')
+    {
+        token.type = TOKEN_MINUS;
+        strcpy(token.lexeme, "-");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '+')
+    {
+        token.type = TOKEN_PLUS;
+        strcpy(token.lexeme, "+");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '(')
+    {
+        token.type = TOKEN_OPEN_PARENTHESIS;
+        strcpy(token.lexeme, "(");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == ')')
+    {
+        token.type = TOKEN_CLOSE_PARENTHESIS;
+        strcpy(token.lexeme, ")");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '[')
+    {
+        token.type = TOKEN_OPEN_BRACKET;
+        strcpy(token.lexeme, "[");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == ']')
+    {
+        token.type = TOKEN_CLOSE_BRACKET;
+        strcpy(token.lexeme, "]");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    if (*p == '$')
+    {
+        token.type = TOKEN_DOLLAR_SIGN;
+        strcpy(token.lexeme, "$");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    // String or char literal using single quotes
     if (*p == '\'' && !is_inside_quotes(line_start, p))
     {
-        token.type = TOKEN_CHAR;
         int i = 0;
-        token.lexeme[i++] = *p; // opening quote
-        p++;
+        p++; // skip opening quote
 
-        if (*p != '\0' && *p != '\n')
+        while (*p != '\'' && *p != '\0' && *p != '\n')
         {
-            token.lexeme[i++] = *p;
+            if (i < (int)sizeof(token.lexeme) - 1)
+                token.lexeme[i++] = *p;
             p++;
-        }
-        else
-        {
-            occur_error(ERROR_NO_CHAR_WRITTEN_AND_END_OF_LINE, line, g_filename);
-            goto terminate;
         }
 
         if (*p == '\'')
         {
-            token.lexeme[i++] = *p;
+            p++; // skip closing quote
+            token.lexeme[i] = '\0';
+            token.type = TOKEN_STRING; // Treat as string!
+            *input_ptr = p;
+            return token;
+        }
+        else
+        {
+            occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
+            goto terminate;
+        }
+    }
+
+    // String literal token e.g. "Hello, World!"
+    if (*p == '"' && !is_inside_quotes(line_start, p))
+    {
+        token.type = TOKEN_STRING;
+        int i = 0;
+        p++; // Skip opening quote
+
+        // Capture string content
+        while (*p != '"' && *p != '\0' && *p != '\n')
+        {
+            if (i < (int)sizeof(token.lexeme) - 1)
+                token.lexeme[i++] = *p;
             p++;
+        }
+
+        if (*p == '"')
+        {
+            p++; // Skip closing quote
         }
         else
         {
@@ -172,29 +288,33 @@ Token get_next_token(const char **input_ptr, int *line)
             goto terminate;
         }
 
-        token.lexeme[i] = '\0';
+        token.lexeme[i] = '\0'; // null-terminate string
         *input_ptr = p;
         return token;
     }
 
-    // String literal token e.g. "Hello, World!"
-    if (*p == '"' && !is_inside_quotes(line_start, p)) {
+    if (*p == '\"' && !is_inside_quotes(line_start, p))
+    {
         token.type = TOKEN_STRING;
         int i = 0;
         token.lexeme[i++] = *p; // opening quote
         p++;
 
-    // Capture until closing quote or end of line/input
-        while (*p != '"' && *p != '\0' && *p != '\n') {
+        // Capture until closing quote or end of line/input
+        while (*p != '"' && *p != '\0' && *p != '\n')
+        {
             if (i < (int)sizeof(token.lexeme) - 1)
                 token.lexeme[i++] = *p;
             p++;
         }
 
-        if (*p == '"') {
+        if (*p == '"')
+        {
             token.lexeme[i++] = *p; // closing quote
             p++;
-        } else {
+        }
+        else
+        {
             occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
             goto terminate;
         }
@@ -255,19 +375,23 @@ Token get_next_token(const char **input_ptr, int *line)
         if (reg_type != TOKEN_REG)
         {
             token.type = reg_type;
-            if (token.type == TOKEN_REG8) {
+            if (token.type == TOKEN_REG8)
+            {
                 token.t_register8 = get_register8_by_name(upper_lexeme);
                 strcpy(token.lexeme, upper_lexeme);
             }
-            if (token.type == TOKEN_REG16) {
+            if (token.type == TOKEN_REG16)
+            {
                 token.t_register16 = get_register16_by_name(upper_lexeme);
                 strcpy(token.lexeme, upper_lexeme);
             }
-            if (token.type == TOKEN_REG32) {
+            if (token.type == TOKEN_REG32)
+            {
                 token.t_register32 = get_register32_by_name(upper_lexeme);
                 strcpy(token.lexeme, upper_lexeme);
             }
-            if (token.type == TOKEN_SEGREG) {
+            if (token.type == TOKEN_SEGREG)
+            {
                 token.t_segregister = get_segment_register_by_name(upper_lexeme);
                 strcpy(token.lexeme, upper_lexeme);
             }
@@ -391,22 +515,26 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
             printf("Token: %-12s Lexeme: %s\n",
                    instruction_type_to_string(token.instr_type),
                    token.lexeme);
-        } else if (token.type == TOKEN_REG8)
+        }
+        else if (token.type == TOKEN_REG8)
         {
             printf("Token: %-12s Lexeme: %s\n",
                    reg8_type_to_string(token.t_register8),
                    token.lexeme);
-        } else if (token.type == TOKEN_REG16)
+        }
+        else if (token.type == TOKEN_REG16)
         {
             printf("Token: %-12s Lexeme: %s\n",
                    reg16_type_to_string(token.t_register16),
                    token.lexeme);
-        } else if (token.type == TOKEN_REG32)
+        }
+        else if (token.type == TOKEN_REG32)
         {
             printf("Token: %-12s Lexeme: %s\n",
                    reg32_type_to_string(token.t_register32),
                    token.lexeme);
-        } else if (token.type == TOKEN_SEGREG)
+        }
+        else if (token.type == TOKEN_SEGREG)
         {
             printf("Token: %-12s Lexeme: %s\n",
                    segreg_type_to_string(token.t_segregister),
@@ -428,46 +556,78 @@ const char *token_type_to_string(TokenType type)
 {
     switch (type)
     {
+    // === Core assembly elements ===
     case TOKEN_INSTR:
         return "INSTR";
     case TOKEN_REG:
         return "REG";
-    case TOKEN_NUMBER:
-        return "NUMBER";
-    case TOKEN_COMMA:
-        return "COMMA";
-    case TOKEN_LABEL:
-        return "LABEL";
-    case TOKEN_DIRECTIVE:
-        return "DIRECTIVE";
-    case TOKEN_COMMENT:
-        return "COMMENT";
-    case TOKEN_CHAR:
-        return "CHAR";
-    case TOKEN_EOF:
-        return "EOF";
-    case TOKEN_ERROR:
-        return "ERROR";
-    case TOKEN_DOT:
-        return "DOT";
-    case TOKEN_DATASEGMENT:
-        return "DATASEGMENT";
     case TOKEN_REG8:
         return "REG8";
     case TOKEN_REG16:
         return "REG16";
     case TOKEN_REG32:
         return "REG32";
+    case TOKEN_SEGREG:
+        return "SEGREG";
+
+    case TOKEN_NUMBER:
+        return "NUMBER";
     case TOKEN_STRING:
         return "STRING";
+    case TOKEN_CHAR:
+        return "CHAR";
+
+    case TOKEN_LABEL:
+        return "LABEL";
+    case TOKEN_COMMENT:
+        return "COMMENT";
+    case TOKEN_DIRECTIVE:
+        return "DIRECTIVE";
+
+    // === Sections ===
     case TOKEN_SECTION:
         return "SECTION";
     case TOKEN_SECTION_TYPE:
         return "SECTION_TYPE";
+    case TOKEN_DATASEGMENT:
+        return "DATASEGMENT";
+
+    // === Symbols & punctuation ===
+    case TOKEN_COMMA:
+        return "COMMA";
     case TOKEN_COLON:
         return "COLON";
-    case TOKEN_SEGREG:
-        return "SEGREG";
+    case TOKEN_DOT:
+        return "DOT";
+    case TOKEN_PLUS:
+        return "PLUS";
+    case TOKEN_MINUS:
+        return "MINUS";
+    case TOKEN_STAR:
+        return "STAR";
+    case TOKEN_MODULO:
+        return "MODULO";
+    case TOKEN_SEMICOLON:
+        return "SEMICOLON";
+
+    case TOKEN_OPEN_PARENTHESIS:
+        return "OPEN_PARENTHESIS";
+    case TOKEN_CLOSE_PARENTHESIS:
+        return "CLOSE_PARENTHESIS";
+    case TOKEN_OPEN_BRACKET:
+        return "OPEN_BRACKET";
+    case TOKEN_CLOSE_BRACKET:
+        return "CLOSE_BRACKET";
+
+    case TOKEN_DOLLAR_SIGN:
+        return "DOLLAR_SIGN";
+
+    // === Utility ===
+    case TOKEN_EOF:
+        return "EOF";
+    case TOKEN_ERROR:
+        return "ERROR";
+
     default:
         return "UNKNOWN";
     }

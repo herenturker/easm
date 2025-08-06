@@ -8,27 +8,49 @@
  * @brief Represents different types of tokens that can be identified during lexical analysis.
  */
 typedef enum {
-    TOKEN_INSTR,        /**< Assembly instruction */
-    TOKEN_REG,          /**< General register (not specifically typed) */
-    TOKEN_REG8,         /**< 8-bit register */
-    TOKEN_REG16,        /**< 16-bit register */
-    TOKEN_REG32,        /**< 32-bit register */
-    TOKEN_SEGREG,       /**< Segment register */
-    TOKEN_NUMBER,       /**< Numeric literal */
-    TOKEN_COMMA,        /**< Comma symbol (',') */
-    TOKEN_COLON,        /**< Colon symbol (':') */
-    TOKEN_LABEL,        /**< Label identifier */
-    TOKEN_DIRECTIVE,    /**< Assembler directive */
-    TOKEN_COMMENT,      /**< Comment line or part */
-    TOKEN_CHAR,         /**< Character literal */
-    TOKEN_EOF,          /**< End of file or input */
-    TOKEN_ERROR,        /**< Invalid or unknown token */
-    TOKEN_DOT,          /**< Dot symbol ('.') */
-    TOKEN_DATASEGMENT,  /**< Data segment indicator */
-    TOKEN_STRING,       /**< String literal */
-    TOKEN_SECTION,      /**< Section keyword */
-    TOKEN_SECTION_TYPE  /**< Type of section (e.g., DATA, TEXT) */
+    // === Core assembly elements ===
+    TOKEN_INSTR,            /**< Assembly instruction (e.g., MOV, JMP) */
+    TOKEN_REG,              /**< General-purpose register */
+    TOKEN_REG8,             /**< 8-bit register (e.g., AL, BH) */
+    TOKEN_REG16,            /**< 16-bit register (e.g., AX, SI) */
+    TOKEN_REG32,            /**< 32-bit register (e.g., EAX, ESI) */
+    TOKEN_SEGREG,           /**< Segment register (e.g., DS, ES) */
+
+    TOKEN_NUMBER,           /**< Numeric literal (decimal, hex, etc.) */
+    TOKEN_STRING,           /**< String literal (e.g., "Hello") */
+    TOKEN_CHAR,             /**< Character literal (e.g., 'A') */
+
+    TOKEN_LABEL,            /**< Label identifier (e.g., my_label:) */
+    TOKEN_COMMENT,          /**< Comment (e.g., ; This is a comment) */
+    TOKEN_DIRECTIVE,        /**< Assembler directive (e.g., db, org, equ) */
+
+    // === Sections ===
+    TOKEN_SECTION,          /**< 'section' keyword */
+    TOKEN_SECTION_TYPE,     /**< Section type (e.g., .text, .data) */
+    TOKEN_DATASEGMENT,      /**< Identifier in the data section (e.g., msg) */
+
+    // === Symbols & punctuation ===
+    TOKEN_COMMA,            /**< , */
+    TOKEN_COLON,            /**< : */
+    TOKEN_DOT,              /**< . */
+    TOKEN_PLUS,             /**< + */
+    TOKEN_MINUS,            /**< - */
+    TOKEN_STAR,              /**< * */
+    TOKEN_MODULO,           /**< % (modulo symbol) */
+    TOKEN_SEMICOLON,        /**< ; */
+
+    TOKEN_OPEN_PARENTHESIS,     /**< ( */
+    TOKEN_CLOSE_PARENTHESIS,    /**< ) */
+    TOKEN_OPEN_BRACKET,         /**< [ (used for memory references) */
+    TOKEN_CLOSE_BRACKET,        /**< ] */
+
+    TOKEN_DOLLAR_SIGN,      /**< $ (current address) */
+
+    // === Utility ===
+    TOKEN_EOF,              /**< End of file/input */
+    TOKEN_ERROR             /**< Unknown or invalid token */
 } TokenType;
+
 
 /**
  * @brief Structure representing a token returned by the lexer.

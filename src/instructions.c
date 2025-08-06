@@ -200,6 +200,18 @@ const char *instruction_type_to_string(InstructionType type)
         return "INSTR_SYSCALL";
     case INSTR_SYSRET:
         return "INSTR_SYSRET";
+    case INSTR_CLI:
+        return "INSTR_CLI";
+    case INSTR_LOOP:
+        return "INSTR_LOOP";
+    case INSTR_LODSB:
+        return "INSTR_LODSB";
+    case INSTR_LODSW:
+        return "INSTR_LODSW";
+    case INSTR_LODSD:
+        return "INSTR_LODSD";
+    case INSTR_LODSQ:
+        return "INSTR_LODSQ";
 
     // Control & system instructions
     case INSTR_LGDT:
@@ -250,6 +262,8 @@ const char *instruction_type_to_string(InstructionType type)
         return "DIRECTIVE_GLOBAL";
     case DIRECTIVE_ALIGN:
         return "DIRECTIVE_ALIGN";
+    case DIRECTIVE_TIMES:
+        return "DIRECTIVE_TIMES";
 
     default:
         return "INSTR_UNKNOWN";
