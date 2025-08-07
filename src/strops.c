@@ -11,7 +11,7 @@
  */
 void str_to_upper(char *s) {
     for (; *s; s++) {
-        *s = toupper((unsigned char)*s);
+        *s = (char)toupper((unsigned char)*s);
     }
 }
 
@@ -25,6 +25,6 @@ void str_to_upper(char *s) {
  */
 void str_to_lower(char *s) {
     for (; *s; s++) {
-        *s = tolower((unsigned char)*s);
+        *s = (char)tolower((unsigned char)*s);
     }
 }
