@@ -95,8 +95,18 @@ Token get_next_token(const char **input_ptr, int *line)
     while (*p == ' ' || *p == '\t')
         p++;
 
-    // End of line/input
-    if (*p == '\0' || *p == '\n')
+    // End of line
+    if (*p == '\n')
+    {
+        token.type = TOKEN_EOL;
+        strcpy(token.lexeme, "<EOL>");
+        p++;
+        *input_ptr = p;
+        return token;
+    }
+
+    // End of file/input
+    if (*p == '\0')
     {
         token.type = TOKEN_EOF;
         strcpy(token.lexeme, "<EOF>");
@@ -470,7 +480,7 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
         line_number = 0;
     }
 
-    printf("Parsing line %d: %s\n", line_number, line);
+    // printf("Parsing line %d: %s\n", line_number, line); For lexer debugging
     set_filename(file);
 
     const char *code_ptr = line;
@@ -520,6 +530,13 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
                    token.lexeme);
         }
     }
+    Token eol_token;
+    eol_token.type = TOKEN_EOL;
+    strcpy(eol_token.lexeme, "<EOL>");
+
+    printf("Token: %-12s Lexeme: %s\n",
+       token_type_to_string(eol_token.type),
+       eol_token.lexeme);
 }
 
 /**
@@ -600,6 +617,8 @@ const char *token_type_to_string(TokenType type)
         return "EOF";
     case TOKEN_ERROR:
         return "ERROR";
+    case TOKEN_EOL:
+        return "EOL";
 
     default:
         return "UNKNOWN";

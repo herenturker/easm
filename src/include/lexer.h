@@ -48,7 +48,8 @@ typedef enum {
 
     // === Utility ===
     TOKEN_EOF,              /**< End of file/input */
-    TOKEN_ERROR             /**< Unknown or invalid token */
+    TOKEN_ERROR,             /**< Unknown or invalid token */
+    TOKEN_EOL /**< End of line token */
 } TokenType;
 
 
