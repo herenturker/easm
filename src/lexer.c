@@ -1,3 +1,4 @@
+// lexer.c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -263,35 +264,6 @@ Token get_next_token(const char **input_ptr, int *line)
         }
     }
 
-    // String literal token e.g. "Hello, World!"
-    if (*p == '"' && !is_inside_quotes(line_start, p))
-    {
-        token.type = TOKEN_STRING;
-        int i = 0;
-        p++; // Skip opening quote
-
-        // Capture string content
-        while (*p != '"' && *p != '\0' && *p != '\n')
-        {
-            if (i < (int)sizeof(token.lexeme) - 1)
-                token.lexeme[i++] = *p;
-            p++;
-        }
-
-        if (*p == '"')
-        {
-            p++; // Skip closing quote
-        }
-        else
-        {
-            occur_error(ERROR_NO_CLOSING_QUOTE, line, g_filename);
-            goto terminate;
-        }
-
-        token.lexeme[i] = '\0'; // null-terminate string
-        *input_ptr = p;
-        return token;
-    }
 
     if (*p == '\"' && !is_inside_quotes(line_start, p))
     {
@@ -359,8 +331,9 @@ Token get_next_token(const char **input_ptr, int *line)
         // Check if followed by colon => label
         if (*p == ':')
         {
-            token.type = TOKEN_LABEL;
+            p++;
             *input_ptr = p;
+            token.type = TOKEN_LABEL;
             return token;
         }
 
