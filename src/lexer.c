@@ -7,7 +7,7 @@
 #include "include/errors.h"
 #include "include/strops.h"
 #include "include/instructions.h"
-#include "include/symbol_table.h"
+#include "include/parser.h"
 
 // Global variable to hold current filename for error reporting
 char g_filename[256] = "";
@@ -388,7 +388,7 @@ Token get_next_token(const char **input_ptr, int *line)
                 token.type = TOKEN_SECTION;
                 strcpy(token.lexeme, upper_lexeme);
             }
-            else if (strcmp(upper_lexeme, "DATA") == 0 || strcmp(upper_lexeme, "TEXT") == 0)
+            else if (strcmp(upper_lexeme, "DATA") == 0 || strcmp(upper_lexeme, "TEXT") == 0 || strcmp(upper_lexeme, "BSS") == 0)
             {
                 token.type = TOKEN_SECTION_TYPE;
                 strcpy(token.lexeme, upper_lexeme);
@@ -485,58 +485,111 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
 
     const char *code_ptr = line;
 
+    static char line_buffer[256] = ""; // To save line in it.
+
     // Tokenize entire line
     while (1)
     {
         Token token = get_next_token(&code_ptr, &line_number);
+        
 
         if (token.type == TOKEN_EOF)
             break;
 
         if (token.type == TOKEN_INSTR)
         {
+            /*
             printf("Token: %-12s Lexeme: %s\n",
                    instruction_type_to_string(token.instr_type),
                    token.lexeme);
+            */
+            snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     instruction_type_to_string(token.instr_type),
+                     token.lexeme);
+
+            parser_process_line(line_buffer);
         }
         else if (token.type == TOKEN_REG8)
         {
+            /*
             printf("Token: %-12s Lexeme: %s\n",
                    reg8_type_to_string(token.t_register8),
                    token.lexeme);
+            */
+            snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     reg8_type_to_string(token.t_register8),
+                     token.lexeme);
+
+            parser_process_line(line_buffer);
         }
         else if (token.type == TOKEN_REG16)
         {
+            /*
             printf("Token: %-12s Lexeme: %s\n",
                    reg16_type_to_string(token.t_register16),
                    token.lexeme);
+            */
+            snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     reg16_type_to_string(token.t_register16),
+                     token.lexeme);
+
+            parser_process_line(line_buffer);
         }
         else if (token.type == TOKEN_REG32)
         {
+            /*
             printf("Token: %-12s Lexeme: %s\n",
                    reg32_type_to_string(token.t_register32),
                    token.lexeme);
+            */
+            snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     reg32_type_to_string(token.t_register32),
+                     token.lexeme);
+            parser_process_line(line_buffer);
         }
         else if (token.type == TOKEN_SEGREG)
         {
+            /*
             printf("Token: %-12s Lexeme: %s\n",
                    segreg_type_to_string(token.t_segregister),
                    token.lexeme);
+            */
+            snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     segreg_type_to_string(token.t_segregister),
+                     token.lexeme);
+
+            parser_process_line(line_buffer);
         }
         else
         {
+            /*
             printf("Token: %-12s Lexeme: %s\n",
                    token_type_to_string(token.type),
                    token.lexeme);
+            */
+            snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     token_type_to_string(token.type),
+                     token.lexeme);
+
+            parser_process_line(line_buffer);
         }
     }
     Token eol_token;
     eol_token.type = TOKEN_EOL;
     strcpy(eol_token.lexeme, "<EOL>");
 
+    /*
     printf("Token: %-12s Lexeme: %s\n",
        token_type_to_string(eol_token.type),
        eol_token.lexeme);
+    */
+
+    snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
+                     token_type_to_string(eol_token.type),
+                     eol_token.lexeme);
+
+    parser_process_line(line_buffer);
+
 }
 
 /**
