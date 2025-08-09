@@ -36,18 +36,20 @@ typedef enum
 /**
  * @brief Enum for 32-bit general-purpose registers.
  */
-typedef enum
-{
-    REG32_NONE = 0, /**< No 32-bit register */
-    REG32_EAX,      /**< Extended Accumulator */
-    REG32_EBX,      /**< Extended Base */
-    REG32_ECX,      /**< Extended Counter */
-    REG32_EDX,      /**< Extended Data */
-    REG32_ESI,      /**< Extended Source Index */
-    REG32_EDI,      /**< Extended Destination Index */
-    REG32_EBP,      /**< Extended Base Pointer */
-    REG32_ESP       /**< Extended Stack Pointer */
-} Register32;
+
+
+// typedef enum
+// {
+    // REG32_NONE = 0, /**< No 32-bit register */
+    // REG32_EAX,      /**< Extended Accumulator */
+    // REG32_EBX,      /**< Extended Base */
+    // REG32_ECX,      /**< Extended Counter */
+    // REG32_EDX,      /**< Extended Data */
+    // REG32_ESI,      /**< Extended Source Index */
+    // REG32_EDI,      /**< Extended Destination Index */
+    // REG32_EBP,      /**< Extended Base Pointer */
+    // REG32_ESP       /**< Extended Stack Pointer */
+// } Register32;
 
 /**
  * @brief Enum for segment registers.
@@ -101,7 +103,7 @@ Register16 get_register16_by_name(const char *name);
  * @param reg 32-bit register enum value.
  * @return String representation of the register name.
  */
-const char *get_register32_name(Register32 reg);
+// const char *get_register32_name(Register32 reg);
 
 /**
  * @brief Resolves a 32-bit register from its name.
@@ -109,7 +111,7 @@ const char *get_register32_name(Register32 reg);
  * @param name Register name string.
  * @return Corresponding Register32 enum value.
  */
-Register32 get_register32_by_name(const char *name);
+// Register32 get_register32_by_name(const char *name);
 
 /**
  * @brief Gets the name of a segment register.
@@ -151,7 +153,7 @@ const char *reg16_type_to_string(Register16 reg_type);
  * @param reg_type The Register32 enum value.
  * @return A constant string representing the 32-bit register name.
  */
-const char *reg32_type_to_string(Register32 reg_type);
+// const char *reg32_type_to_string(Register32 reg_type);
 
 /**
  * @brief Convert a segment register enum value to its string representation.

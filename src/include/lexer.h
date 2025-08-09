@@ -13,7 +13,7 @@ typedef enum {
     TOKEN_REG,              /**< General-purpose register */
     TOKEN_REG8,             /**< 8-bit register (e.g., AL, BH) */
     TOKEN_REG16,            /**< 16-bit register (e.g., AX, SI) */
-    TOKEN_REG32,            /**< 32-bit register (e.g., EAX, ESI) */
+    // TOKEN_REG32,            /**< 32-bit register (e.g., EAX, ESI) */
     TOKEN_SEGREG,           /**< Segment register (e.g., DS, ES) */
 
     TOKEN_NUMBER,           /**< Numeric literal (decimal, hex, etc.) */
@@ -62,7 +62,7 @@ typedef struct
     InstructionType instr_type; /**< Type of the instruction */
     Register8 t_register8; /**< Type of the register (8 bit) */
     Register16 t_register16; /**< Type of the register (16 bit) */
-    Register32 t_register32; /**< Type of the register (32 bit) */
+    // Register32 t_register32; /**< Type of the register (32 bit) */
     SegmentRegister t_segregister; /**< Type of the register (segment register) */
     int line;               /**< Line number where the token was found */
     char lexeme[64];        /**< The actual lexeme (string representation) */
@@ -124,7 +124,7 @@ TokenType get_register_token_type(const char *lexeme);
  * @param lexeme The register name.
  * @return int 1 if it's a 32-bit register, 0 otherwise.
  */
-int is_register32(const char *lexeme);
+// int is_register32(const char *lexeme);
 
 /**
  * @brief Checks whether a string is a 16-bit register.

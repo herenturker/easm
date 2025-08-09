@@ -4,6 +4,7 @@
 #ifdef __cplusplus
 #include <vector>
 #include <string>
+#include <cstdint>
 
 void handle_parse(std::vector<std::string> token_vector, std::vector<std::string> lexeme_vector);
 

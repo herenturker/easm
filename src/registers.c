@@ -84,6 +84,8 @@ Register16 get_register16_by_name(const char *name) {
  * @param reg Enum value representing the 32-bit register.
  * @return const char* String representation of the register, or "UNKNOWN" if invalid.
  */
+
+/*
 const char *get_register32_name(Register32 reg) {
     switch (reg) {
         case REG32_EAX: return "EAX";
@@ -97,6 +99,7 @@ const char *get_register32_name(Register32 reg) {
         default: return "UNKNOWN";
     }
 }
+*/
 
 /**
  * @brief Returns the enum value of a 32-bit register by its name.
@@ -104,6 +107,7 @@ const char *get_register32_name(Register32 reg) {
  * @param name Null-terminated string name of the register (e.g., "EAX").
  * @return Register32 Corresponding enum value, or REG32_NONE if unknown.
  */
+/*
 Register32 get_register32_by_name(const char *name) {
     if (strcmp(name, "EAX") == 0) return REG32_EAX;
     if (strcmp(name, "EBX") == 0) return REG32_EBX;
@@ -115,6 +119,7 @@ Register32 get_register32_by_name(const char *name) {
     if (strcmp(name, "ESP") == 0) return REG32_ESP;
     return REG32_NONE;
 }
+*/
 
 /**
  * @brief Returns the name of a segment register.
@@ -197,6 +202,8 @@ const char *reg16_type_to_string(Register16 reg_type) {
  * @param reg_type The Register32 enum value.
  * @return A constant string representing the 32-bit register name.
  */
+
+ /*
 const char *reg32_type_to_string(Register32 reg_type) {
     switch (reg_type) {
         case REG32_EAX: return "REG32_EAX";
@@ -210,6 +217,9 @@ const char *reg32_type_to_string(Register32 reg_type) {
         default: return "REG32_UNKNOWN";
     }
 }
+
+*/
+
 /**
  * @brief Convert a segment register enum value to its string representation.
  *

@@ -7,7 +7,7 @@ CFLAGS = -O2 \
   -Wmissing-prototypes -Wno-unused-parameter -Wstack-protector \
   -Wconversion -Wsign-conversion -Wdouble-promotion -Wnull-dereference \
   -Wduplicated-cond -Wlogical-op -Wjump-misses-init -Wstrict-prototypes \
-  -fstack-protector-strong -fPIC -pipe \
+  -fstack-protector-strong -fPIC -pipe -g \
   -I./include
 
 CXXFLAGS = -O2 \
@@ -17,7 +17,7 @@ CXXFLAGS = -O2 \
   -Wno-unused-parameter -Wstack-protector \
   -Wconversion -Wsign-conversion -Wdouble-promotion -Wnull-dereference \
   -Wduplicated-cond -Wlogical-op \
-  -fstack-protector-strong -fPIC -pipe \
+  -fstack-protector-strong -fPIC -pipe -g \
   -I./include
 
 SRC_C   = $(wildcard src/*.c) $(wildcard src/arch/*.c)

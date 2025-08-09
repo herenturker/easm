@@ -58,10 +58,12 @@ int is_register16(const char *lexeme)
     return get_register16_by_name(lexeme) != REG16_NONE;
 }
 
+/*
 int is_register32(const char *lexeme)
 {
     return get_register32_by_name(lexeme) != REG32_NONE;
 }
+*/
 
 /**
  * @brief Determines the token type of a register lexeme.
@@ -72,8 +74,8 @@ TokenType get_register_token_type(const char *lexeme)
         return TOKEN_REG8;
     if (is_register16(lexeme))
         return TOKEN_REG16;
-    if (is_register32(lexeme))
-        return TOKEN_REG32;
+    // if (is_register32(lexeme))
+        // return TOKEN_REG32;
     if (is_segment_register(lexeme))
         return TOKEN_SEGREG;
     return TOKEN_REG;
@@ -368,11 +370,13 @@ Token get_next_token(const char **input_ptr, int *line)
                 token.t_register16 = get_register16_by_name(upper_lexeme);
                 strcpy(token.lexeme, upper_lexeme);
             }
+            /*
             if (token.type == TOKEN_REG32)
             {
                 token.t_register32 = get_register32_by_name(upper_lexeme);
                 strcpy(token.lexeme, upper_lexeme);
             }
+            */
             if (token.type == TOKEN_SEGREG)
             {
                 token.t_segregister = get_segment_register_by_name(upper_lexeme);
@@ -535,18 +539,20 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
 
             parser_process_line(line_buffer);
         }
-        else if (token.type == TOKEN_REG32)
-        {
+        // else if (token.type == TOKEN_REG32)
+        // {
             /*
             printf("Token: %-12s Lexeme: %s\n",
                    reg32_type_to_string(token.t_register32),
                    token.lexeme);
             */
+           /*
             snprintf(line_buffer, sizeof(line_buffer), "Token: %-12s Lexeme: %s\n",
                      reg32_type_to_string(token.t_register32),
                      token.lexeme);
             parser_process_line(line_buffer);
-        }
+        */
+        // }
         else if (token.type == TOKEN_SEGREG)
         {
             /*
@@ -608,8 +614,8 @@ const char *token_type_to_string(TokenType type)
         return "REG8";
     case TOKEN_REG16:
         return "REG16";
-    case TOKEN_REG32:
-        return "REG32";
+    // case TOKEN_REG32:
+        // return "REG32";
     case TOKEN_SEGREG:
         return "SEGREG";
 
