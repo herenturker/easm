@@ -212,6 +212,10 @@ const char *instruction_type_to_string(InstructionType type)
         return "INSTR_LODSD";
     case INSTR_LODSQ:
         return "INSTR_LODSQ";
+    case INSTR_PUSHA:
+        return "INSTR_PUSHA";
+    case INSTR_POPA:
+        return "INSTR_POPA";
 
     // Control & system instructions
     case INSTR_LGDT:

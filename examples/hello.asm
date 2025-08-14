@@ -1,6 +1,5 @@
 ; "Hello, world!" tarzı .asm dosyası
 
-section .text
 start:
     mov ax, 0xB800     ; Video belleği adresi
     mov ds, ax

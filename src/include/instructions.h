@@ -87,6 +87,8 @@ typedef enum
     INSTR_LODSW,   /**< Load string byte */
     INSTR_LODSD,   /**< Load string byte */
     INSTR_LODSQ,   /**< Load string byte */
+    INSTR_PUSHA, /**< Push all general-purpose registers (AX, CX, DX, BX, SP, BP, SI, DI) onto the stack (16-bit only). SP's original value is pushed. */
+    INSTR_POPA,  /**< Pop values into DI, SI, BP, discard popped value for SP, then restore BX, DX, CX, AX (16-bit only). SP is not restored from stack. */
 
     // Control & System instructions
     INSTR_LGDT,   /**< Load Global Descriptor Table */
@@ -212,6 +214,8 @@ static const InstructionEntry instruction_table[] = {
     {"LODSW", INSTR_LODSW},
     {"LODSD", INSTR_LODSD},
     {"LODSQ", INSTR_LODSQ},
+    {"PUSHA", INSTR_PUSHA},
+    {"POPA", INSTR_POPA},
 
     // System control instructions
     {"LGDT", INSTR_LGDT},
@@ -232,12 +236,12 @@ static const InstructionEntry instruction_table[] = {
     {"DB", DIRECTIVE_DB},
     {"DW", DIRECTIVE_DW},
     {"DD", DIRECTIVE_DD},
-    {"DQ", DIRECTIVE_DQ},
-    {"DT", DIRECTIVE_DT},
+    // {"DQ", DIRECTIVE_DQ},
+    // {"DT", DIRECTIVE_DT},
     {"EQU", DIRECTIVE_EQU},
-    {"SECTION", DIRECTIVE_SECTION},
-    {"EXTERN", DIRECTIVE_EXTERN},
-    {"GLOBAL", DIRECTIVE_GLOBAL},
+    // {"SECTION", DIRECTIVE_SECTION},
+    // {"EXTERN", DIRECTIVE_EXTERN},
+    // {"GLOBAL", DIRECTIVE_GLOBAL},
     {"ALIGN", DIRECTIVE_ALIGN},
     {"TIMES", DIRECTIVE_TIMES},
 

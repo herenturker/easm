@@ -3,6 +3,10 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Handles a non-fatal error occurrence.
  * 
@@ -42,5 +46,9 @@ static const char* const ERROR_NO_CHAR_WRITTEN_AND_END_OF_LINE = "Error: Char is
  * @brief Error message for an unrecognized or invalid token.
  */
 static const char* const ERROR_UNKNOWN_TOKEN = "Error: Cannot resolve symbol.";
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // ERRORS_H

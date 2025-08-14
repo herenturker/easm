@@ -125,6 +125,7 @@ Token get_next_token(const char **input_ptr, int *line)
         *input_ptr = p;
         return token;
     }
+
     if (*p == '.')
     {
         token.type = TOKEN_DOT;
@@ -133,6 +134,7 @@ Token get_next_token(const char **input_ptr, int *line)
         *input_ptr = p;
         return token;
     }
+
     if (*p == ':')
     {
         token.type = TOKEN_COLON;
@@ -461,7 +463,7 @@ void lexer_process_line(const char *line, const char *file, int *line_number_ptr
         if (len > (int)sizeof(line_number_str) - 1)
             len = sizeof(line_number_str) - 1;
 
-        strncpy(line_number_str, line, len);
+        strncpy(line_number_str, line, (size_t)len);
         line_number_str[len] = '\0';
         line_number = atoi(line_number_str);
 

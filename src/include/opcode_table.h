@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <stdint.h>
+#include <vector>
 
 /**
  * @enum OperandType
@@ -17,7 +18,7 @@ enum class OperandType {
     NONE,   /**< No operand. */
     IMM8,   /**< Immediate value (8-bit). */
     IMM16,  /**< Immediate value (16-bit). */
-    // IMM32,  /**< Immediate value (32-bit). */ // I removed these because the assembler only supports 16 bit operations (for now. they are as comments here for future usage)
+    // IMM32,  /**< Immediate value (32-bit). */ // I removed these because the assembler only supports 16 bit operations (for now. they are as comments here for future usage maybe)
     REG8,   /**< General-purpose register (8-bit). */
     REG16,  /**< General-purpose register (16-bit). */
     // REG32,  /**< General-purpose register (32-bit). */
@@ -25,7 +26,8 @@ enum class OperandType {
     MEM16,  /**< Memory operand (16-bit). */
     // MEM32,  /**< Memory operand (32-bit). */
     SEGREG,  /**< Segment register. */
-    STRING /**< String expression */
+    STRING, /**< String expression */
+    CHAR
 };
 
 /**
@@ -40,6 +42,7 @@ struct OpcodeInfo {
     bool requires_modrm;     /**< True if the instruction requires a ModR/M byte. */
     bool has_imm;            /**< True if the instruction contains an immediate value. */
     int imm_size;            /**< Size of the immediate value in bytes (0 if none). */
+    uint8_t opcode_ext;      /**< NEW: ModR/M reg field for group instructions. */
 };
 
 /**
@@ -64,6 +67,19 @@ struct OperandKey {
     }
 };
 
+struct ParsedOperand {
+    OperandType type;
+    std::string value;
+    uint8_t reg_code;
+    uint8_t seg_code;
+    uint8_t modrm_rm;
+    int16_t displacement;
+};
+
+ParsedOperand parseOperand(const std::vector<std::string>& tokens,
+                           const std::vector<std::string>& lexemes,
+                           size_t& idx);
+
 /**
  * @struct OperandKeyHash
  * @brief Custom hash functor for OperandKey.
@@ -83,6 +99,40 @@ struct OperandKeyHash {
              ^ (std::hash<int>()((int)k.op2) << 2);
     }
 };
+
+// No operand instructions (including implicit operand string instructions)
+const std::unordered_map<std::string, int> no_operand_instructions = {
+    {"HLT", 0}, {"NOP", 0}, {"RET", 0}, {"LEAVE", 0},
+    {"LOCK", 0}, {"WAIT", 0}, {"SALC", 0}, {"CLC", 0},
+    {"STC", 0}, {"CMC", 0}, {"CLI", 0}, {"STD", 0},
+    {"CLD", 0}, {"ESC", 0}, {"INT3", 0}, {"IRET", 0},
+    {"SYSCALL", 0}, {"SYSRET", 0}, {"PUSHA", 0}, {"POPA", 0},
+    {"LODS", 0}, {"LODSB", 0}, {"LODSW", 0}, {"LODSD", 0}, {"LODSQ", 0},
+    {"STOS", 0}, {"SCAS", 0}, {"CMPS", 0}, {"REP", 0}, {"REPE", 0}, {"REPNE", 0},
+    {"LOOP", 0}
+};
+
+// One operand instructions
+const std::unordered_map<std::string, int> one_operand_instructions = {
+    {"INT", 1}, {"PUSH", 1}, {"POP", 1}, {"INC", 1}, {"DEC", 1},
+    {"NOT", 1}, {"NEG", 1}, {"SHL", 1}, {"SAL", 1}, {"SHR", 1},
+    {"SAR", 1}, {"JMP", 1}, {"JE", 1}, {"JNE", 1}, {"JZ", 1},
+    {"JNZ", 1}, {"JG", 1}, {"JGE", 1}, {"JL", 1}, {"JLE", 1},
+    {"JA", 1}, {"JAE", 1}, {"JB", 1}, {"JBE", 1}, {"JS", 1},
+    {"JNS", 1}, {"CALL", 1}, {"SET", 1}, {"IN", 1}, {"OUT", 1},
+    {"ARPL", 1}, {"CLTS", 1}, {"INVLPG", 1}, {"VERR", 1}, {"VERW", 1},
+    {"STR", 1}, {"LTR", 1}, {"LGDT", 1}, {"SGDT", 1},
+    {"LIDT", 1}, {"SIDT", 1}, {"IDIV", 1}
+};
+
+// Two operand instructions
+const std::unordered_map<std::string, int> two_operand_instructions = {
+    {"MOV", 2}, {"LEA", 2}, {"ADD", 2}, {"SUB", 2}, {"IMUL", 2},
+    {"AND", 2}, {"OR", 2}, {"XOR", 2}, {"TEST", 2}, {"CMP", 2},
+    {"XCHG", 2}, {"MOVSX", 2}, {"MOVZX", 2}, {"BOUND", 2}, {"MOVCR", 2}
+};
+
+
 
 /**
  * @brief Global opcode map.
