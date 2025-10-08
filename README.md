@@ -3,6 +3,8 @@
 **EASM** is an educational project that demonstrates the inner workings of a simple **two-pass assembler**.  
 It’s designed to help students and hobbyists learn about assembler structure, symbol resolution, and code generation using the GNU toolchain.
 
+> ⚠️ Note: This project is educational and work in progress.
+
 ---
 
 ## 📘 Overview
