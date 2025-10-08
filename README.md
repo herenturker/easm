@@ -34,7 +34,7 @@ EASM is **not intended as a production assembler**, but as an educational resour
 Clone the repository and build using GNU Make:
 
 ```bash
-git clone https://github.com/<herenturker>/easm.git
+git clone https://github.com/herenturker/easm.git
 cd easm
 make
 ```
