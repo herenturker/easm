@@ -69,7 +69,6 @@ By default, EASM reads the input assembly file and performs two passes:
 1. Pass 1: Scans for labels, directives, and builds the symbol table
 2. Pass 2: Resolves symbols and emits the final binary output
 
-Output files can then be examined using a hex viewer or loaded into a simple virtual machine for testing.
 
 ## Runtime Dependencies
 
